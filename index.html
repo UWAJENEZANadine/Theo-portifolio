@@ -62,6 +62,12 @@
       color: #f1c40f;
     }
 
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
     section {
       min-height: 50vh;
       /* Full screen height */
@@ -127,12 +133,14 @@
     }
 
     #about {
-    min-height: auto;
-    padding: 2rem 1rem;
-    text-align: center;
-    max-width: 1000px;     /* keeps it nicely narrow on big screens */
-    margin: 0 auto;       /* centers the section horizontally */
-  }
+      min-height: auto;
+      padding: 2rem 1rem;
+      text-align: center;
+      max-width: 1000px;
+      /* keeps it nicely narrow on big screens */
+      margin: 0 auto;
+      /* centers the section horizontally */
+    }
 
 
     .grid {
@@ -218,14 +226,39 @@
 
     /* Responsive */
     @media (max-width: 768px) {
+      #home {
+        padding-top: 3rem;
+        /* normal padding */
+      }
+
       nav {
         flex-direction: column;
+        position: relative;
       }
 
       nav ul {
+        display: none;
         flex-direction: column;
-        gap: 0.8rem;
-        margin-top: 0.5rem;
+        background: #2c3e50;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        top: 100%;
+        /* position ul below the nav bar so ☰ is not included */
+        left: 0;
+        padding: 0.5rem 0;
+      }
+
+      nav ul.active {
+        display: flex;
+      }
+
+
+      .menu-toggle {
+        display: block;
+        z-index: 1001;
+        /* always on top */
+        cursor: pointer;
       }
 
       #home h1 {
@@ -271,8 +304,10 @@
 <body>
   <!-- Navbar -->
   <nav>
-    <div><strong>TB | Portfolio</strong></div>
-    <ul>
+    <div class="logo"><strong>TB | Portfolio</strong></div>
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+
+    <ul id="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#services">Services</a></li>
@@ -365,6 +400,33 @@
   <footer>
     <p>© 2025 Theogene Bizimana | All Rights Reserved</p>
   </footer>
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    // Toggle menu visibility and hide/show the hamburger icon
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');   // show/hide menu items
+      menuToggle.style.display = navLinks.classList.contains('active') ? 'none' : 'block'; // hide ☰ if menu shown
+    });
+
+    // Scroll to section and collapse menu on mobile when menu item clicked
+    navLinks.querySelectorAll('li a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          const target = document.querySelector(link.getAttribute('href'));
+          target.scrollIntoView({ behavior: 'smooth' });
+          navLinks.classList.remove('active'); // hide menu items
+          menuToggle.style.display = 'block';  // show ☰ icon again
+        }
+      });
+    });
+  </script>
+
+
+
+
 </body>
 
 </html>
